@@ -19,12 +19,15 @@
 #define TIMER_USED            0     // HardwareTimer 0
 #define TIMER_DIVIDER         16 
 #define TIMER_SCALE           (TIMER_BASE_CLK /TIMER_DIVIDER)  
-#define DELAY_S               (0.2)
+#define DELAY_S               (0.1)
 
 int led_array[8] = {4,5,18,19};
-int state = STATE_1; // Initial STATE
+int state_geser = STATE_1; // Initial STATE
+int state_debounce_l = STATE_DETECT, state_debounce_r = STATE_DETECT;
 int led_out[4];
-int button = 0, counter = 0;
+int button_left = 0, button_right = 0, button_geser = 0;
+int counter_left = 0, counter_right = 0;
+int button_debounce_l = 0, button_debounce_r = 0;
 
 void IRAM_ATTR timer_group_isr(void* para) {
 
@@ -39,8 +42,16 @@ void IRAM_ATTR timer_group_isr(void* para) {
     }
     // ---------------------------------------------------------------
     // ------------------Main procedures for ISR----------------------
+    // ------------------CASCADE FSM----------------------------------
+    // Debouncer & Edge Detector
+    debouncer(&button_left, &counter_left, &state_debounce_l, &button_debounce_l);
+    debouncer(&button_right, &counter_right, &state_debounce_r, &button_debounce_r);
+
+    // DECISION MAKING
+    button_geser = button_debounce_l + button_debounce_r;
+
     // FSM Processed
-    fsm(&button, &state, led_out, &counter);
+    lampu_geser(&button_geser, &state_geser, led_out);
     
     // Turn on desired LED 
     for(int i=0; i < 4; i++){
@@ -98,10 +109,10 @@ void app_main(void) {
         // Check Button (0 if pressed)
         // Button value will back to 0 after FSM finished
         if (gpio_get_level(GPIO_INPUT_PB1) == 0) {
-            button = 1;
+            button_left = 1;
         }
-        else if(gpio_get_level(GPIO_INPUT_PB2) == 0){
-            button = -1;
+        if(gpio_get_level(GPIO_INPUT_PB2) == 0){
+            button_right = -1;
         }
         vTaskDelay(1);
     };
