@@ -9,7 +9,11 @@ int main(){
     int out;
     int counter = 0;
     int state = STATE_DETECT;
-
+    printf("Test Case: ");
+    for (int k=0; k<11; k++){
+        printf("%d, ", button[k]);
+    }
+    printf("\n");
     for (int i=0; i<10; i++){
         int prev = button[i];
         debouncer(&button[i], &counter, &state, &out);

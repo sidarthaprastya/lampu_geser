@@ -1,4 +1,6 @@
 # LAMPU_GESER
+![](experiment.jpg)
+
 ## Tugas EL4121 <br/> Perancangan Sistem Embedded <br/> Semester 1 - 2022/2023
 
 Nama: Sidartha Prastya. P <br/>
@@ -17,5 +19,6 @@ NIM: 13219033 <br/>
 ### Microcontroller:
 - ESP32 DOIT (Compiled with ESP-IDF)
 
+![](circuit.png)
 ### Note:
 - Push button mode: External pull-up
