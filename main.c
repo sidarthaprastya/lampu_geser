@@ -19,7 +19,7 @@
 #define TIMER_USED            0     // HardwareTimer 0
 #define TIMER_DIVIDER         16 
 #define TIMER_SCALE           (TIMER_BASE_CLK /TIMER_DIVIDER)  
-#define DELAY_S               (0.1)
+#define DELAY_S               (0.01)
 
 int led_array[8] = {4,5,18,19};
 int state_geser = STATE_1; // Initial STATE
@@ -44,8 +44,8 @@ void IRAM_ATTR timer_group_isr(void* para) {
     // ------------------Main procedures for ISR----------------------
     // ------------------CASCADE FSM----------------------------------
     // Debouncer & Edge Detector
-    debouncer(&button_left, &counter_left, &state_debounce_l, &button_debounce_l);
-    debouncer(&button_right, &counter_right, &state_debounce_r, &button_debounce_r);
+    debouncer(button_left, &counter_left, &state_debounce_l, &button_debounce_l);
+    debouncer(button_right, &counter_right, &state_debounce_r, &button_debounce_r);
 
     // DECISION MAKING
     button_geser = button_debounce_l + button_debounce_r;
@@ -111,8 +111,14 @@ void app_main(void) {
         if (gpio_get_level(GPIO_INPUT_PB1) == 0) {
             button_left = 1;
         }
+        else{
+            button_left = 0;
+        }
         if(gpio_get_level(GPIO_INPUT_PB2) == 0){
             button_right = -1;
+        }
+        else{
+            button_right = 0;
         }
         vTaskDelay(1);
     };
