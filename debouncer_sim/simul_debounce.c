@@ -3,7 +3,7 @@
 
 int main(){
     // Test case:
-    int button[10] = {1, 0, 1, 1, 1, 1, 0, 1, 0, 0};
+    int button[15] = {1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1};
     // ----------
 
     int out;
@@ -14,10 +14,11 @@ int main(){
         printf("%d, ", button[k]);
     }
     printf("\n");
-    for (int i=0; i<10; i++){
-        int prev = button[i];
-        debouncer(&button[i], &counter, &state, &out);
-        printf("INPUT %d : %d\t | OUT : %d\n", (i+1), prev, out);
+    for (int i=0; i<15; i++){
+        int prev_button = button[i];
+        int prev_state = state;
+        debouncer(button[i], &counter, &state, &out);
+        printf("INPUT %d : %d\t | STATE : %d\t | OUT : %d\n", (i+1), prev_button, prev_state, out);
     }
     
     return 0;
